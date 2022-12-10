@@ -7,6 +7,7 @@ import { trpc } from "../utils/trpc";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import "../styles/globals.css";
+import Navbar from "../components/navbar/Navbar";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -15,6 +16,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <ChakraProvider>
+        <Navbar />
+
         <Component {...pageProps} />
       </ChakraProvider>
     </SessionProvider>
