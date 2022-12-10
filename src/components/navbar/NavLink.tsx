@@ -13,7 +13,7 @@ export default function NavLink({ children }: Props) {
             rounded={'md'}
             _hover={{
                 textDecoration: 'none',
-                bg: useColorModeValue('gray.200', 'gray.700'),
+                bg: useColorModeValue('blue.400', 'gray.700'),
             }}
             href={'#'}>
             {children}

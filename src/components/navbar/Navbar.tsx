@@ -20,45 +20,40 @@ import {
     useDisclosure
 } from "@chakra-ui/react";
 import NavLink from "./NavLink";
-const Links = ['Dashboard', 'Projects', 'Team'];
+const Links = ['Dashboard', 'Team'];
 export default function Navbar() {
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
         <>
-            <Box bgGradient={useColorModeValue('linear(to-r,#1CD8D2,#93EDC7)', 'linear(to-r,#141E30,#243B55')} px={4} py={2}>
+            <Box bgGradient={useColorModeValue('linear(to-r,#3a7bd5,#3a6073)', 'gray.900')} px={4} py={2} m={0} textColor={'white'}
+            >
                 <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+                    <IconButton
+                        bg={'transparent'}
+                        size={'md'}
+                        icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+                        aria-label={'Open Menu'}
+                        display={{ md: 'none' }}
+                        onClick={isOpen ? onClose : onOpen}
+                    />
+                    <Box bg={"inherit"} display={{ md: 'flex' }} rounded={"xl"} >
+                        <HStack as={'nav'} >
 
-                    <HStack alignItems={'center'}>
-
-                        <IconButton
-                            aria-label="Open Menu"
-                            size={'sm'}
-                            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-                            display={{ md: 'none' }}
-                            onClick={isOpen ? onClose : onOpen}
-                            bg={'inherit'}
-                        />
-                        <HStack
-                            as={'nav'}
-                            px={4}
-                            display={{ base: 'none', md: 'flex' }}
-                            justifyContent={'center'}
-                            alignItems={'center'}>
                             {Links.map((link) => (
                                 <NavLink key={link}>{link}</NavLink>
                             ))}
                         </HStack>
-                    </HStack>
+                    </Box>
 
                     <Flex alignItems={'center'}>
                         <Stack direction={'row'} spacing={7}>
-                            <Button onClick={toggleColorMode} bg={'inherit'}>
+                            <IconButton aria-label="theme switcher" onClick={toggleColorMode} bg={'transparent'} variant={'unstyled'} className='p-2 transition hover:bg-slate-800'>
                                 {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
-                            </Button>
+                            </IconButton>
 
-                            <Menu>
+                            <Menu >
                                 <MenuButton
                                     as={Button}
                                     rounded={'full'}
@@ -70,7 +65,7 @@ export default function Navbar() {
                                         src={'https://avatars.dicebear.com/api/male/username.svg'}
                                     />
                                 </MenuButton>
-                                <MenuList alignItems={'center'}>
+                                <MenuList alignItems={'center'} bg={"transparent"} textColor={'black'}>
                                     <br />
                                     <Center>
                                         <Avatar
@@ -86,7 +81,7 @@ export default function Navbar() {
                                     <MenuDivider />
                                     <MenuItem>Your Servers</MenuItem>
                                     <MenuItem>Account Settings</MenuItem>
-                                    <MenuItem>Log out</MenuItem>
+                                    <MenuItem>Logout</MenuItem>
                                 </MenuList>
                             </Menu>
                         </Stack>
