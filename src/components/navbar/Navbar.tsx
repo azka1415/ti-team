@@ -14,20 +14,25 @@ import {
     MenuItem,
     MenuList,
     Stack,
-    Text,
     useColorMode,
     useColorModeValue,
     useDisclosure
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import NavLink from "./NavLink";
 const Links = ['Dashboard', 'Team'];
 export default function Navbar() {
+    const router = useRouter();
+    console.log(router.pathname);
     const { colorMode, toggleColorMode } = useColorMode();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
         <>
-            <Box bgGradient={useColorModeValue('linear(to-r,#3a7bd5,#3a6073)', 'gray.900')} px={4} py={2} m={0} textColor={'white'}
+            <Box bgGradient={useColorModeValue('linear(to-r,#3a7bd5,#3a6073)', 'gray.900')} px={2} py={1}
+                textColor={'white'}
+                rounded={'lg'}
+                className='sticky top-0 z-50'
             >
                 <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
                     <IconButton
@@ -38,7 +43,7 @@ export default function Navbar() {
                         display={{ md: 'none' }}
                         onClick={isOpen ? onClose : onOpen}
                     />
-                    <Box bg={"inherit"} display={{ md: 'flex' }} rounded={"xl"} >
+                    <Box bg={"inherit"} display={{ md: 'flex' }} rounded={"xl"} className='hidden' >
                         <HStack as={'nav'} >
 
                             {Links.map((link) => (
