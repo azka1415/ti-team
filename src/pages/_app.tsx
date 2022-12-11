@@ -4,7 +4,6 @@ import { SessionProvider } from "next-auth/react";
 
 import { trpc } from "../utils/trpc";
 
-import { ChakraProvider } from "@chakra-ui/react";
 
 import "../styles/globals.css";
 import Navbar from "../components/navbar/Navbar";
@@ -15,9 +14,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <ChakraProvider>
-        <Component {...pageProps} />
-      </ChakraProvider>
+      <Component {...pageProps} />
     </SessionProvider>
   );
 };
