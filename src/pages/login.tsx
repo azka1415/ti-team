@@ -19,7 +19,7 @@ export default function Login() {
     return (
         <>
             <Navbar />
-            <div className='flex justify-center my-96 items-center  scrollbar-hide'>
+            <div className='flex justify-center my-80 items-center  scrollbar-hide'>
                 <div className='flex flex-col space-y-2 p-2 bg-gradient-to-r from-blue-400 to-blue-700 rounded-lg'>
                     {session && (
                         <>
