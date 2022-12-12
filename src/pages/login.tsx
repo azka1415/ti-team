@@ -19,8 +19,8 @@ export default function Login() {
     return (
         <>
             <Navbar />
-            <div className='flex justify-center h-screen items-center w-screen scrollbar-hide'>
-                <div className='flex flex-col space-y-2 p-2'>
+            <div className='flex justify-center my-96 items-center  scrollbar-hide'>
+                <div className='flex flex-col space-y-2 p-2 bg-gradient-to-r from-blue-400 to-blue-700 rounded-lg'>
                     {session && (
                         <>
                             <h1 className='text-2xl font-bold'>
@@ -35,7 +35,6 @@ export default function Login() {
                     )}
                     {!session && (
                         <>
-                            <h1 className='text-4xl font-bold'>Login</h1>
                             <button className='bg-blue-500 p-2 rounded-md text-white' onClick={handleSignIn}>{loading ? 'Logging in...' : 'login'}</button>
                         </>
                     )}
