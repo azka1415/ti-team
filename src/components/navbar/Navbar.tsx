@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { HamburgerIcon } from "@chakra-ui/icons";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
