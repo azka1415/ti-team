@@ -20,7 +20,7 @@ export default function Login() {
         <>
             <Navbar />
             <div className='flex justify-center my-80 items-center  scrollbar-hide'>
-                <div className='flex flex-col space-y-2 p-2 bg-gradient-to-r from-blue-400 to-blue-700 rounded-lg'>
+                <div className='flex flex-col space-y-2 p-2 bg-blue-400 rounded-lg'>
                     {session && (
                         <>
                             <h1 className='text-2xl font-bold'>
@@ -29,13 +29,13 @@ export default function Login() {
                             <p>
                                 ({session.user?.email})
                             </p>
-                            <button className='bg-blue-500 p-2 rounded-md text-white' onClick={handleSignOut}>
+                            <button className='bg-blue-500 p-2 rounded-md text-black transition-all hover:bg-white' onClick={handleSignOut}>
                                 {loading ? 'Logging out...' : 'Log out'}</button>
                         </>
                     )}
                     {!session && (
                         <>
-                            <button className='bg-blue-500 p-2 rounded-md text-white' onClick={handleSignIn}>{loading ? 'Logging in...' : 'login'}</button>
+                            <button className='bg-blue-500 p-2 rounded-md text-black transition-all hover:bg-white' onClick={handleSignIn}>{loading ? 'Logging in...' : 'login'}</button>
                         </>
                     )}
                 </div>
