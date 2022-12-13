@@ -1,3 +1,4 @@
+import type { GetServerSideProps } from "next";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -5,8 +6,32 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import Navbar from "../components/navbar/Navbar";
 import Note from "../components/note/Note";
+import { getServerAuthSession } from "../server/common/get-server-auth-session";
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getServerAuthSession(context)
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false
+      }
+    }
+  }
+
+  return {
+    props: {
+      session
+    }
+  }
+
+}
 
 const Home: NextPage = () => {
+  const { data: session, status } = useSession();
+  const items = trpc.note.getItems.useQuery();
+
 
   return (
     <>
@@ -17,7 +42,13 @@ const Home: NextPage = () => {
       </Head>
       <Navbar />
       <div className="flex flex-col h-full w-full bg-inherit">
-
+        <div className="flex w-full h-min p-2 justify-between items-center">
+          <h1 className="text-4xl font-bold">Notes</h1>
+          <button className="bg-purple-600 p-2 rounded-lg text-sm">Add Note</button>
+        </div>
+        <div className="flex justify-center items-center">
+          <Note />
+        </div>
       </div>
     </>
   );
