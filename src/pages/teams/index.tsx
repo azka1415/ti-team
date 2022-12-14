@@ -12,7 +12,7 @@ export default function TeamHome() {
             </Head>
             <Navbar />
             <div className="flex flex-col h-full w-full bg-inherit">
-
+                <h1>Belom, Mager</h1>
             </div>
         </>
     )
