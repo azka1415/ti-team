@@ -47,7 +47,7 @@ const Home: NextPage = () => {
       <div className="flex flex-col h-full w-full bg-inherit">
         <div className="flex w-full h-min p-2 justify-between items-center">
           <h1 className="text-4xl font-bold">Notes</h1>
-          <button className="bg-purple-500 p-2 rounded-lg text-sm" onClick={() => setOpenModal(true)}>Add Note</button>
+          <button className="bg-purple-400 p-2 rounded-lg text-sm transition-all hover:bg-purple-500" onClick={() => setOpenModal(true)}>Add Note</button>
         </div>
         <AddNote openModal={openModal} refetch={items.refetch} session={session} setOpenModal={setOpenModal} />
         <div className="flex flex-col space-y-4 justify-center items-center transition-all md:grid md:grid-cols-3 lg:grid-cols-5 md:space-y-0 md:gap-4 p-2">
@@ -57,7 +57,7 @@ const Home: NextPage = () => {
             const one = new Date(b.updatedAt).getTime()
             const two = new Date(a.updatedAt).getTime()
             return one - two
-          }).map(item => (
+          }).map((item) => (
             <Note key={item.id} item={item} refetch={items.refetch} />
           ))}
         </div>
