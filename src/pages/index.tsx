@@ -1,12 +1,14 @@
 import type { GetServerSideProps } from "next";
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import Navbar from "../components/navbar/Navbar";
 import Note from "../components/note/Note";
 import { getServerAuthSession } from "../server/common/get-server-auth-session";
+import { useState } from "react";
+import AddNote from "../components/note/AddNote";
+
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession(context)
@@ -31,6 +33,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
   const items = trpc.note.getItems.useQuery();
+  const [openModal, setOpenModal] = useState(false)
 
 
   return (
@@ -44,10 +47,19 @@ const Home: NextPage = () => {
       <div className="flex flex-col h-full w-full bg-inherit">
         <div className="flex w-full h-min p-2 justify-between items-center">
           <h1 className="text-4xl font-bold">Notes</h1>
-          <button className="bg-purple-600 p-2 rounded-lg text-sm">Add Note</button>
+          <button className="bg-purple-500 p-2 rounded-lg text-sm" onClick={() => setOpenModal(true)}>Add Note</button>
         </div>
-        <div className="flex justify-center items-center">
-          <Note />
+        <AddNote openModal={openModal} refetch={items.refetch} session={session} setOpenModal={setOpenModal} />
+        <div className="flex flex-col space-y-4 justify-center items-center transition-all md:grid md:grid-cols-3 lg:grid-cols-5 md:space-y-0 md:gap-4 p-2">
+          {items.isLoading && <div>Loading...</div>}
+          {items.data?.length === 0 && <div>No notes found</div>}
+          {items.data?.sort((a, b) => {
+            const one = new Date(b.updatedAt).getTime()
+            const two = new Date(a.updatedAt).getTime()
+            return one - two
+          }).map(item => (
+            <Note key={item.id} item={item} refetch={items.refetch} />
+          ))}
         </div>
       </div>
     </>
