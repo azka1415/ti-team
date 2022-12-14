@@ -62,7 +62,7 @@ export default function AddNote({ setOpenModal, openModal, refetch }: Props) {
                                 leaveFrom="opacity-100 scale-100"
                                 leaveTo="opacity-0 scale-95"
                             >
-                                <Dialog.Panel className="w-full flex flex-col max-w-md lg:max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 justify-center items-center align-middle shadow-xl transition-all">
+                                <Dialog.Panel className="w-full flex flex-col max-w-md transform overflow-hidden rounded-2xl bg-white p-6 justify-center items-center align-middle shadow-xl transition-all">
                                     <Dialog.Title
                                         as="h1"
                                         className="text-lg font-bold text-center text-gray-900"
