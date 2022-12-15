@@ -1,7 +1,7 @@
 import type { GetServerSideProps } from "next";
 import { type NextPage } from "next";
 import Head from "next/head";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import Navbar from "../components/navbar/Navbar";
 import Note from "../components/note/Note";
@@ -31,7 +31,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 }
 
 const Home: NextPage = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const items = trpc.note.getItems.useQuery();
   const [openModal, setOpenModal] = useState(false)
 
