@@ -68,6 +68,7 @@ export default function NoteModal({ openModal, setOpenModal, note, handleCheck, 
 
             setSavedTitle(newTitle)
             setSavedBody(newBody)
+            return
         }
         alert('Please Change Something Before Submitting')
 
