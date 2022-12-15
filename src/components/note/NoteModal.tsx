@@ -20,7 +20,6 @@ export default function NoteModal({ openModal, setOpenModal, note, handleCheck, 
     const [newBody, setNewBody] = useState(String(note.body))
     const [savedTitle, setSavedTitle] = useState(note.name)
     const [savedBody, setSavedBody] = useState(note.body)
-    const [warning, setWarning] = useState(false)
     const editNote = trpc.note.editItem.useMutation()
 
 

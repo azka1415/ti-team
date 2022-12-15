@@ -14,7 +14,6 @@ export default function Note({ item, refetch }: Props) {
     const handleCheck = trpc.note.checkItem.useMutation()
     const handleDelete = trpc.note.deleteItem.useMutation()
     const [deleted, setDeleted] = useState(true)
-    const [setAddNote, setSetAddNote] = useState(false)
     const [openModal, setOpenModal] = useState(false)
     const checkItem = async () => {
         handleCheck.mutate({
@@ -62,7 +61,8 @@ export default function Note({ item, refetch }: Props) {
                             {handleCheck.isLoading && <div>Updating...</div>}
                         </div>
                         <hr />
-                        {openModal && <NoteModal openModal={openModal} setOpenModal={setOpenModal} note={item} handleCheck={handleCheck} handleDelete={handleDelete} refetch={refetch} setDeleted={setDeleted} />}
+                        {openModal &&
+                            <NoteModal openModal={openModal} setOpenModal={setOpenModal} note={item} handleCheck={handleCheck} handleDelete={handleDelete} refetch={refetch} setDeleted={setDeleted} />}
                         <div className="relative flex h-full overflow-hidden overflow-ellipsis cursor-pointer" onClick={() => setOpenModal(true)}>
                             <div className="absolute flex justify-center p-2 items-center w-full h-full text-white opacity-0 rounded-lg transition-all hover:bg-gray-600 hover:opacity-75">
                                 <div className="bg-white p-2 rounded-lg">
