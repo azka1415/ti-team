@@ -49,6 +49,12 @@ export default function NoteModal({ openModal, setOpenModal, note, handleCheck, 
     }
 
     const handleSave = () => {
+
+        if (savedTitle === '') {
+            alert('Please Fill The Title')
+            return
+        }
+
         if (note.name !== savedTitle || note.body !== savedBody) {
             editNote.mutate({
                 text: note.id,
