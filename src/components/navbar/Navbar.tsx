@@ -49,6 +49,11 @@ export default function Navbar() {
                                         </Link>
                                     </Menu.Item>
                                     <Menu.Item>
+                                        <Link href={'/account'}>
+                                            <button className={`${pathname === 'account' ? 'bg-white underline' : 'bg-blue-400'} transition-all hover:bg-white p-2 rounded-lg`} >Account</button>
+                                        </Link>
+                                    </Menu.Item>
+                                    <Menu.Item>
                                         <button onClick={() => signOut()} className='bg-blue-400 transition-all hover:bg-white p-2 rounded-lg'>Log out</button>
                                     </Menu.Item>
 
