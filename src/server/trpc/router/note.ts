@@ -67,13 +67,22 @@ export const noteRouter = router({
       z.object({ text: z.string(), newName: z.string(), newBody: z.string() })
     )
     .mutation(async ({ ctx, input }) => {
-      if (input.newBody === "") {
+      const oldNote = await ctx.prisma.note.findUnique({
+        where: { id: input.text },
+      });
+      if (!oldNote) {
+        return new TRPCError({
+          code: "NOT_FOUND",
+          message: "note not found",
+        });
+      }
+      if (input.newBody === oldNote.body || input.newBody === "") {
         const item = await ctx.prisma.note.update({
           where: { id: input.text },
           data: { name: input.newName },
         });
         return item;
-      } else if (input.newName === "") {
+      } else if (input.newName === oldNote.name || input.newName === "") {
         const item = await ctx.prisma.note.update({
           where: { id: input.text },
           data: { body: input.newBody },
