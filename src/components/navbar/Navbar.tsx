@@ -37,7 +37,6 @@ export default function Navbar() {
                                 leaveFrom="transform opacity-100 scale-100"
                                 leaveTo="transform translate-x-5 opacity-0 scale-75"
                             >
-
                                 <Menu.Items as="div" className={`flex md:hidden absolute flex-col justify-start items-start right-1 p-2 bg-blue-600 rounded-lg top-[3.8rem] shadow-xl space-y-1 transition-all`}>
                                     <Menu.Item>
                                         <Link href={'/'}>
@@ -57,7 +56,35 @@ export default function Navbar() {
                             </Transition>
                         </Menu>
                     ) : <button onClick={() => signIn('google')}>Login</button>}
-                {session?.user?.image && <Image src={session?.user?.image} alt='user profile picture' width={35} height={35} className='hidden md:flex rounded-md' />}
+                <Menu>
+                    <Menu.Button>
+                        {session?.user?.image && <Image src={session?.user?.image} alt='user profile picture' width={35} height={35} className='hidden md:flex rounded-md' />}
+                    </Menu.Button>
+                    <Transition
+                        as={Fragment}
+                        enter="transition ease-in-out duration-200"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform translate-x-5 opacity-0 scale-75"
+                    >
+                        <Menu.Items as="div" className={`invisible md:visible absolute flex flex-col justify-center items-center w-60 h-60 right-1 p-2 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg top-[3.8rem] shadow-xl space-y-4 transition-all`}>
+                            <Menu.Item>
+                                <Image width={100} height={100} src={String(session?.user?.image)} alt='user profile picture' className="rounded-full" />
+                            </Menu.Item>
+                            <Menu.Item>
+                                <Link href={'/account'}>
+                                    <button className={`${pathname === 'account' ? 'bg-white underline' : 'bg-blue-400'} transition-all hover:bg-white p-2 rounded-lg`} >Account</button>
+                                </Link>
+                            </Menu.Item>
+                            <Menu.Item>
+                                <button onClick={() => signOut()} className='bg-blue-400 transition-all hover:bg-white p-2 rounded-lg'>Log out</button>
+                            </Menu.Item>
+
+                        </Menu.Items>
+                    </Transition>
+                </Menu>
             </div>
 
 
