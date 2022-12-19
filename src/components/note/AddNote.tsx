@@ -17,8 +17,6 @@ export default function AddNote({ setOpenModal, openModal, refetch }: Props) {
     const [title, setTitle] = useState('')
     const [body, setBody] = useState('')
     const handleAdd = trpc.note.addItem.useMutation()
-
-
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         handleAdd.mutate({
@@ -26,6 +24,8 @@ export default function AddNote({ setOpenModal, openModal, refetch }: Props) {
             body
         }, {
             onSuccess() {
+                setTitle('')
+                setBody('')
                 refetch()
                 setOpenModal(false)
             }
@@ -86,7 +86,7 @@ export default function AddNote({ setOpenModal, openModal, refetch }: Props) {
                                             >
                                                 Cancel
                                             </button>
-                                            <button type="submit" className="bg-green-400 p-2 rounded-lg transition-all hover:bg-green-500">Submit</button>
+                                            <button type="submit" className={`${title.length === 0 ? 'invisible' : 'visible'} bg-green-400 p-2 rounded-lg transition-all hover:bg-green-500`}>Submit</button>
                                         </div>
                                     </form>
                                     <div className="flex justify-start items-center w-full">
