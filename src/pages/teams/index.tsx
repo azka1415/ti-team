@@ -1,8 +1,12 @@
 import Head from 'next/head'
 import React from 'react'
 import Navbar from '../../components/navbar/Navbar'
+import { trpc } from '../../utils/trpc'
 
 export default function TeamHome() {
+    const getTeams = trpc.team.getTeams.useQuery()
+    const { data } = getTeams
+    console.log(data);
     return (
         <>
             <Head>
@@ -12,7 +16,21 @@ export default function TeamHome() {
             </Head>
             <Navbar />
             <div className="flex flex-col h-full w-full bg-inherit">
-                <h1>Belom, Mager</h1>
+                <div className='flex w-full h-full p-2'>
+                    <h1 className='text-3xl font-bold'>Teams</h1>
+                    <div className='flex justify-end items-center w-full'>
+                        <button className='p-2 bg-purple-500 text-sm rounded-lg transition-all hover:bg-purple-600'>Create Team</button>
+                    </div>
+                </div>
+                <div className='flex flex-col px-2'>
+                    {getTeams.isLoading && <div>Loading...</div>}
+                    {data?.teams.map((team) => (
+                        <div key={team.id} className='flex w-fit p-2 rounded-md bg-blue-300'>
+                            <h1>{team.name}</h1>
+                        </div>
+                    ))}
+                </div>
+
             </div>
         </>
     )
