@@ -4,6 +4,7 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { Fragment } from "react"
 import { trpc } from "../../utils/trpc";
+import { CloseIcon } from "@chakra-ui/icons";
 
 interface Props {
     session: Session | null
@@ -81,17 +82,25 @@ export default function AddNote({ setOpenModal, openModal, refetch }: Props) {
 
                                             <button
                                                 type="button"
-                                                className="bg-red-400 p-2 rounded-lg transition-all hover:bg-red-500"
+                                                className="flex items-center justify-center w-fit bg-red-400 p-2 rounded-lg transition-all hover:bg-red-500"
                                                 onClick={() => setOpenModal(false)}
                                             >
-                                                Cancel
+                                                <CloseIcon />
                                             </button>
-                                            <button type="submit" className={`${title.length === 0 ? 'invisible' : 'visible'} bg-green-400 p-2 rounded-lg transition-all hover:bg-green-500`}>Submit</button>
+                                            <Transition
+                                                show={title.length > 0}
+                                                enter="transition ease-out duration-200"
+                                                enterFrom="transform translate-x-8"
+                                                enterTo="transform translate-x-0"
+                                                leave="transition ease-in duration-100"
+                                                leaveFrom="transform translate-x-0"
+                                                leaveTo="transform translate-x-8"
+                                            >
+                                                <button type="submit" className={` bg-green-400 p-2 rounded-lg transition-all hover:bg-green-500`}>Submit</button>
+                                            </Transition>
                                         </div>
                                     </form>
-                                    <div className="flex justify-start items-center w-full">
 
-                                    </div>
                                 </Dialog.Panel>
                             </Transition.Child>
                         </div>
