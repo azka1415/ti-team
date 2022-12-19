@@ -33,7 +33,7 @@ export const noteRouter = router({
     }),
   getItems: publicProcedure.query(async ({ ctx }) => {
     const items = await ctx.prisma.note.findMany({
-      where: { userId: ctx.session?.user?.id },
+      where: { User: { id: ctx.session?.user?.id } },
     });
     return items;
   }),
@@ -76,13 +76,7 @@ export const noteRouter = router({
           message: "note not found",
         });
       }
-      if (input.newBody === oldNote.body || input.newBody === "") {
-        const item = await ctx.prisma.note.update({
-          where: { id: input.text },
-          data: { name: input.newName },
-        });
-        return item;
-      } else if (input.newName === oldNote.name || input.newName === "") {
+      if (input.newName === "") {
         const item = await ctx.prisma.note.update({
           where: { id: input.text },
           data: { body: input.newBody },
