@@ -10,6 +10,7 @@ import { Fragment, useEffect, useState } from "react";
 import AddNote from "../components/note/AddNote";
 import type { Note as NoteModel } from "@prisma/client";
 import { Transition } from "@headlessui/react";
+import { AddIcon } from "@chakra-ui/icons";
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -63,10 +64,11 @@ const Home: NextPage = () => {
       <div className="flex flex-col h-full w-full bg-inherit">
         <div className="flex w-full h-min p-2 justify-between items-center">
           <h1 className="text-4xl font-bold">Notes</h1>
-          <button className="bg-purple-400 p-2 rounded-lg text-sm transition-all hover:bg-purple-500" onClick={() => setOpenModal(true)}>Add Note</button>
+          <button className="flex items-center gap-2 bg-purple-400 p-2 rounded-lg text-sm transition-all hover:bg-purple-500" onClick={() => setOpenModal(true)}>Add Note <AddIcon /> </button>
         </div>
         <AddNote openModal={openModal} refetch={items.refetch} session={session} setOpenModal={setOpenModal} />
-        {items.isLoading && <div>Loading...</div>}
+        {items.isLoading && <div className="p-2">Loading...</div>}
+        {items.data?.length === 0 && <div className="p-2">No notes found</div>}
         <Transition as='div'
           appear={true}
           show={showItems}
@@ -77,7 +79,7 @@ const Home: NextPage = () => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
           className="flex flex-col space-y-4 justify-center items-center transition-all md:grid md:grid-cols-3 lg:grid-cols-5 md:space-y-0 md:gap-4 p-2">
-          {notes.length === 0 ? (<div>No notes found</div>) : notes.sort((a, b) => {
+          {notes.sort((a, b) => {
             if (sort === 'desc') {
               const one = new Date(b.updatedAt).getTime()
               const two = new Date(a.updatedAt).getTime()
