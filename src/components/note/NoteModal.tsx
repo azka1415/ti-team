@@ -2,6 +2,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import type { Note } from '@prisma/client'
 import { Fragment, useState } from 'react'
 import { trpc } from '../../utils/trpc'
+import { CheckIcon, CloseIcon, DeleteIcon, SpinnerIcon } from '@chakra-ui/icons'
 
 
 interface Props {
@@ -54,22 +55,20 @@ export default function NoteModal({ openModal, setOpenModal, note, handleCheck, 
             return
         }
 
-        if (note.name !== savedTitle || note.body !== savedBody) {
-            editNote.mutate({
-                text: note.id,
-                newName: newTitle,
-                newBody: newBody
-            }, {
-                onSuccess() {
-                    refetch()
-                },
-            })
 
-            setSavedTitle(newTitle)
-            setSavedBody(newBody)
-            return
-        }
-        alert('Please Change Something Before Submitting')
+        editNote.mutate({
+            text: note.id,
+            newName: newTitle,
+            newBody: newBody
+        }, {
+            onSuccess() {
+                refetch()
+            },
+        })
+
+        setSavedTitle(newTitle)
+        setSavedBody(newBody)
+        return
 
     }
 
@@ -106,10 +105,12 @@ export default function NoteModal({ openModal, setOpenModal, note, handleCheck, 
                                         as="h1"
                                         className="text-lg font-bold text-center text-gray-900 break-all p-2"
                                     >
-                                        Edit Note
+                                        <p>
+                                            Edit Note
+                                        </p>
+                                        {editNote.isLoading && <SpinnerIcon className='animate-spin' />}
                                     </Dialog.Title>
-                                    {editNote.isLoading && <div>Changing...</div>}
-                                    {handleCheck.isLoading && <div>Checking...</div>}
+                                    {handleCheck.isLoading && <SpinnerIcon className='animate-spin' />}
                                     <div className="flex flex-col justify-start items-center w-full">
                                         <div className='flex flex-col justify-center items-center p-2 space-y-2'>
                                             <input type="text" value={newTitle} className={`bg-blue-200 rounded-lg p-2 ${note.checked && 'line-through'}`} onChange={e => setNewTitle(e.target.value)} />
@@ -204,12 +205,16 @@ export default function NoteModal({ openModal, setOpenModal, note, handleCheck, 
                                                 </div>
                                             </div>
                                             <div className="flex justify-end items-center space-x-4">
-                                                <button className="bg-green-500 p-2 rounded-lg transition-all hover:bg-green-600" onClick={checkItem}>{note.checked ? 'Uncheck' : 'Check'}</button>
-                                                <button className="bg-red-500 p-2 rounded-lg transition-all hover:bg-red-600" onClick={deleteItem}>Delete</button>
+                                                <button className="flex justify-center items-center w-fit bg-green-500 p-2 rounded-lg transition-all hover:bg-green-600" onClick={checkItem}>
+                                                    {note.checked ? 'Uncheck' : <CheckIcon />}
+                                                </button>
+                                                <button className="flex justify-center items-center w-fit bg-red-500 p-2 rounded-lg transition-all hover:bg-red-600" onClick={deleteItem}>
+                                                    <DeleteIcon />
+                                                </button>
                                             </div>
                                             <div className='flex w-full justify-between items-center'>
-                                                <button className='p-2 bg-red-500 rounded-lg transition-all hover:bg-red-600'
-                                                    onClick={() => setOpenModal(false)}>Cancel</button>
+                                                <button className='flex justify-center items-center w-fit p-2 bg-red-500 rounded-lg transition-all hover:bg-red-600'
+                                                    onClick={() => setOpenModal(false)}><CloseIcon /></button>
                                                 <button className='p-2 bg-emerald-500 rounded-lg transition-all hover:bg-emerald-600'
                                                     onClick={() => handleSave()}>Submit</button>
 

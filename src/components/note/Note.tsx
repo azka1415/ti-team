@@ -4,7 +4,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { Fragment, useState } from "react"
 import { trpc } from "../../utils/trpc"
 import NoteModal from "./NoteModal"
-import { EditIcon, SpinnerIcon } from "@chakra-ui/icons";
+import { CheckIcon, DeleteIcon, EditIcon, SpinnerIcon } from "@chakra-ui/icons";
 interface Props {
     item: Note,
     refetch: () => void
@@ -98,8 +98,8 @@ const Note = ({ item, refetch, setNotes, notes }: Props) => {
                             </p>
                         </div>
                         <div className="flex justify-end items-center space-x-4">
-                            <button className="bg-green-500 p-2 rounded-lg transition-all hover:bg-green-600" onClick={checkItem}>{item.checked ? 'Uncheck' : 'Check'}</button>
-                            <button className="bg-red-500 p-2 rounded-lg transition-all hover:bg-red-600" onClick={deleteItem}>Delete</button>
+                            <button className="flex items-center justify-center bg-green-500 p-2 rounded-lg w-fit transition-all hover:bg-green-600" onClick={checkItem}>{item.checked ? 'Uncheck' : <CheckIcon />}</button>
+                            <button className="flex items-center justify-center bg-red-500 p-2 rounded-lg w-fit transition-all hover:bg-red-600" onClick={deleteItem}><DeleteIcon /></button>
                         </div>
                     </div>
 
