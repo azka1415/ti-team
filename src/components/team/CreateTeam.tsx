@@ -1,7 +1,5 @@
-import { useState } from "react"
+import { useState } from "react";
 
 export default function CreateTeam() {
-    return (
-        <div></div>
-    )
+  return <div></div>;
 }
