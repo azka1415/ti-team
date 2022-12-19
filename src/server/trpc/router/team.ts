@@ -48,13 +48,7 @@ export const teamRouter = router({
     const teams = await ctx.prisma.member.findMany({
       where: { userId: ctx.session?.user?.id },
       select: {
-        teams: {
-          select: {
-            name: true,
-            description: true,
-            id: true,
-          },
-        },
+        teams: true,
       },
     });
     return teams[0];
@@ -99,13 +93,15 @@ export const teamRouter = router({
       const oldTeam = await ctx.prisma.team.findUnique({
         where: { id: input.teamId },
         select: {
-          members: true,
+          members: {
+            select: {
+              memberId: true,
+            },
+          },
         },
       });
-      const fix = oldTeam?.members.map((member) => {
-        return { memberId: member.memberId };
-      });
-      if (!fix) {
+
+      if (!oldTeam) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "team does not exist",
@@ -115,7 +111,7 @@ export const teamRouter = router({
         where: { id: input.teamId },
         data: {
           members: {
-            set: [...fix, newMember],
+            set: [...oldTeam.members, newMember],
           },
         },
       });
