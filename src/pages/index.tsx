@@ -40,16 +40,6 @@ const Home: NextPage = () => {
   const [sort, setSort] = useState("desc" as "desc" | "asc");
   const [query, setQuery] = useState("");
   const [found, setFound] = useState(true);
-  useEffect(() => {
-    if (items.data?.length === 0) {
-      return;
-    }
-    if (items.data) {
-      setShowItems(false);
-      setNotes(items.data);
-      setShowItems(true);
-    }
-  }, [items.data, query]);
 
   const filteredNotes = useMemo(() => {
     if (query === "") {
@@ -68,8 +58,24 @@ const Home: NextPage = () => {
     setFound(true);
     return filter;
   }, [notes, query]);
-  console.log(filteredNotes);
-  console.log(showItems);
+
+  useEffect(() => {
+    if (items.data?.length === 0) {
+      return;
+    }
+    if (items.data) {
+      setShowItems(false);
+      setNotes(items.data);
+      setShowItems(true);
+    }
+    if (query === "") {
+      setFound(true);
+    }
+    if (!found) {
+      setShowItems(false);
+    }
+  }, [items.data, query, found]);
+
   return (
     <>
       <Head>
