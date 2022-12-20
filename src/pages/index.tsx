@@ -6,11 +6,11 @@ import { trpc } from "../utils/trpc";
 import Navbar from "../components/navbar/Navbar";
 import Note from "../components/note/Note";
 import { getServerAuthSession } from "../server/common/get-server-auth-session";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AddNote from "../components/note/AddNote";
 import type { Note as NoteModel } from "@prisma/client";
 import { Transition } from "@headlessui/react";
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, SearchIcon } from "@chakra-ui/icons";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession(context);
@@ -38,7 +38,8 @@ const Home: NextPage = () => {
   const [notes, setNotes] = useState<NoteModel[]>([]);
   const [showItems, setShowItems] = useState(false);
   const [sort, setSort] = useState("desc" as "desc" | "asc");
-
+  const [query, setQuery] = useState("");
+  const [found, setFound] = useState(true);
   useEffect(() => {
     if (items.data?.length === 0) {
       return;
@@ -48,8 +49,27 @@ const Home: NextPage = () => {
       setNotes(items.data);
       setShowItems(true);
     }
-  }, [items.data]);
+  }, [items.data, query]);
 
+  const filteredNotes = useMemo(() => {
+    if (query === "") {
+      return notes;
+    }
+
+    const filter = notes.filter((note) => {
+      return note.name.toLowerCase().includes(query.toLowerCase());
+    });
+
+    if (filter.length === 0) {
+      setFound(false);
+      return notes;
+    }
+
+    setFound(true);
+    return filter;
+  }, [notes, query]);
+  console.log(filteredNotes);
+  console.log(showItems);
   return (
     <>
       <Head>
@@ -58,15 +78,44 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      <div className="flex h-full w-full flex-col bg-inherit">
+      <div className="flex h-auto w-full flex-col">
         <div className="flex h-min w-full items-center justify-between p-2">
-          <h1 className="text-4xl font-bold">Notes</h1>
-          <button
-            className="flex items-center gap-2 rounded-lg bg-purple-400 p-2 text-sm transition-all hover:bg-purple-500"
-            onClick={() => setOpenModal(true)}
-          >
-            Add Note <AddIcon />{" "}
-          </button>
+          <div className="flex items-center justify-start">
+            <h1 className="text-4xl font-bold">Notes</h1>
+          </div>
+          <div className="flex items-center justify-end">
+            <button
+              className="flex items-center gap-2 rounded-lg bg-purple-400 p-2 text-sm transition-all hover:bg-purple-500"
+              onClick={() => setOpenModal(true)}
+            >
+              Add Note <AddIcon />{" "}
+            </button>
+          </div>
+        </div>
+        <div className="flex w-full flex-col items-center justify-center">
+          <div className="flex items-center justify-center divide-x-2 rounded-lg bg-gray-200 pr-2">
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              id="search"
+              className="rounded-lg bg-gray-200 p-2 text-sm outline-none transition-all"
+            />
+            <SearchIcon />
+          </div>
+          <div className="flex items-center justify-center p-2">
+            <Transition
+              show={!found}
+              enter="transition ease-out duration-300"
+              enterFrom="transform translate-y-4"
+              enterTo="transform translate-y-0"
+              leave="transition ease-in duration-200"
+              leaveFrom="transform translate-y-0"
+              leaveTo="transform translate-y-4"
+            >
+              {!found && <p>No Notes Found</p>}
+            </Transition>
+          </div>
         </div>
         <AddNote
           openModal={openModal}
@@ -88,7 +137,7 @@ const Home: NextPage = () => {
           leaveTo="transform opacity-0 scale-95"
           className="flex flex-col items-center justify-center space-y-4 p-2 transition-all md:grid md:grid-cols-3 md:gap-4 md:space-y-0 lg:grid-cols-5"
         >
-          {notes
+          {filteredNotes
             .sort((a, b) => {
               if (sort === "desc") {
                 const one = new Date(b.updatedAt).getTime();
