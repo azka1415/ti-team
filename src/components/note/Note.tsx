@@ -58,7 +58,7 @@ const Note = ({ item, refetch, setNotes, notes }: Props) => {
       leaveFrom="opacity-100 translate-y-0"
       leaveTo="opacity-0 translate-y-8"
     >
-      <div className="flex w-full flex-col rounded-lg bg-gray-100 p-2 shadow-2xl">
+      <div className="flex w-full flex-col rounded-lg border-2 border-gray-300 bg-gradient-to-b from-blue-400 to-blue-600 p-2 shadow-2xl">
         <div className="flex max-h-96 flex-col space-y-2 rounded-lg p-2 text-start">
           <div className="flex h-fit w-full items-center justify-start space-x-2">
             <p
