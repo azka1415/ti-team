@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import AddNote from "../components/note/AddNote";
 import type { Note as NoteModel } from "@prisma/client";
 import { Transition } from "@headlessui/react";
-import { AddIcon, SearchIcon } from "@chakra-ui/icons";
+import { AddIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession(context);
@@ -99,15 +99,30 @@ const Home: NextPage = () => {
           </div>
         </div>
         <div className="flex w-full flex-col items-center justify-center">
-          <div className="flex items-center justify-center divide-x-2 rounded-lg bg-gray-200 pr-2">
+          <div className="flex h-fit w-fit items-center justify-center rounded-lg bg-gray-200 pr-2">
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               id="search"
               className="rounded-lg bg-gray-200 p-2 text-sm outline-none transition-all"
+              autoComplete="off"
             />
-            <SearchIcon />
+
+            <SearchIcon
+              className={`flex items-center justify-center ${
+                query.length === 0 ? "visible" : "collapse"
+              }`}
+            />
+
+            <button
+              className={`flex items-center justify-center ${
+                query.length !== 0 ? "visible" : "hidden"
+              }`}
+              onClick={() => setQuery("")}
+            >
+              <CloseIcon className="flex w-2" />
+            </button>
           </div>
           <div className="flex items-center justify-center p-2">
             <Transition
