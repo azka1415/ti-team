@@ -30,8 +30,6 @@ export default function NoteModal({
 }: Props) {
   const [newTitle, setNewTitle] = useState(note.name);
   const [newBody, setNewBody] = useState(String(note.body));
-  const [savedTitle, setSavedTitle] = useState(note.name);
-  const [savedBody, setSavedBody] = useState(note.body);
   const editNote = trpc.note.editItem.useMutation();
 
   const checkItem = () => {
@@ -63,7 +61,7 @@ export default function NoteModal({
   };
 
   const handleSave = () => {
-    if (savedTitle === "") {
+    if (newTitle === "") {
       alert("Please Fill The Title");
       return;
     }
@@ -81,8 +79,6 @@ export default function NoteModal({
       }
     );
 
-    setSavedTitle(newTitle);
-    setSavedBody(newBody);
     return;
   };
 
@@ -173,22 +169,6 @@ export default function NoteModal({
                             Reset
                           </button>
                         </Transition>
-                        <Transition
-                          show={newTitle !== savedTitle}
-                          enter="transition ease-in duration-200"
-                          enterFrom="transform opacity-0 translate-x-5"
-                          enterTo="transform opacity-100 translate-x-0"
-                          leave="transition ease-out duration-100"
-                          leaveFrom="transform opacity-100"
-                          leaveTo="transform opacity-0 translate-x-5"
-                        >
-                          <button
-                            className="rounded-lg bg-blue-500 p-2 transition-all hover:bg-blue-600"
-                            onClick={() => setSavedTitle(newTitle)}
-                          >
-                            Save
-                          </button>
-                        </Transition>
                       </div>
                       <div className="flex flex-col space-y-2 rounded-lg bg-blue-200 p-2">
                         <textarea
@@ -229,22 +209,6 @@ export default function NoteModal({
                               onClick={() => setNewBody(String(note.body))}
                             >
                               Reset
-                            </button>
-                          </Transition>
-                          <Transition
-                            show={newBody !== savedBody}
-                            enter="transition ease-in duration-200"
-                            enterFrom="transform opacity-0 translate-x-5"
-                            enterTo="transform opacity-100 translate-x-0"
-                            leave="transition ease-out duration-150"
-                            leaveFrom="transform opacity-100"
-                            leaveTo="transform opacity-0 translate-x-10"
-                          >
-                            <button
-                              className="rounded-lg bg-blue-500 p-2 transition-all hover:bg-blue-600"
-                              onClick={() => setSavedBody(newBody)}
-                            >
-                              Save
                             </button>
                           </Transition>
                         </div>
