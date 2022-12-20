@@ -4,7 +4,7 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { Fragment } from "react";
 import { trpc } from "../../utils/trpc";
-import { CloseIcon } from "@chakra-ui/icons";
+import { CloseIcon, SpinnerIcon } from "@chakra-ui/icons";
 
 interface Props {
   session: Session | null;
@@ -73,7 +73,9 @@ export default function AddNote({ setOpenModal, openModal, refetch }: Props) {
                   >
                     Add Note
                   </Dialog.Title>
-                  {handleAdd.isLoading && <p>Creating...</p>}
+                  {handleAdd.isLoading && (
+                    <SpinnerIcon className="animate-spin" />
+                  )}
                   <form
                     className="flex flex-col items-center space-y-2 p-2"
                     onSubmit={(e) => handleSubmit(e)}
