@@ -6,11 +6,12 @@ import { trpc } from "../utils/trpc";
 import Navbar from "../components/navbar/Navbar";
 import Note from "../components/note/Note";
 import { getServerAuthSession } from "../server/common/get-server-auth-session";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import AddNote from "../components/note/AddNote";
 import type { Note as NoteModel } from "@prisma/client";
 import { Transition } from "@headlessui/react";
 import { AddIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
+import useFilteredNotes from "../hooks/useFilteredNotes";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerAuthSession(context);
@@ -37,27 +38,15 @@ const Home: NextPage = () => {
   const [openModal, setOpenModal] = useState(false);
   const [notes, setNotes] = useState<NoteModel[]>([]);
   const [showItems, setShowItems] = useState(false);
-  const [sort, setSort] = useState("desc" as "desc" | "asc");
-  const [query, setQuery] = useState("");
-  const [found, setFound] = useState(true);
-
-  const filteredNotes = useMemo(() => {
-    if (query === "") {
-      return notes;
-    }
-
-    const filter = notes.filter((note) => {
-      return note.name.toLowerCase().includes(query.toLowerCase());
-    });
-
-    if (filter.length === 0) {
-      setFound(false);
-      return notes;
-    }
-
-    setFound(true);
-    return filter;
-  }, [notes, query]);
+  const {
+    query,
+    setQuery,
+    found,
+    handleNoteFilter,
+    completed,
+    uncompleted,
+    filteredNotes,
+  } = useFilteredNotes(notes);
 
   useEffect(() => {
     if (items.data?.length === 0) {
@@ -68,13 +57,10 @@ const Home: NextPage = () => {
       setNotes(items.data);
       setShowItems(true);
     }
-    if (query === "") {
-      setFound(true);
-    }
     if (!found) {
       setShowItems(false);
     }
-  }, [items.data, query, found]);
+  }, [items.data, found]);
 
   return (
     <>
@@ -94,11 +80,11 @@ const Home: NextPage = () => {
               className="flex items-center gap-2 rounded-lg bg-purple-400 p-2 text-sm transition-all hover:bg-purple-500"
               onClick={() => setOpenModal(true)}
             >
-              Add Note <AddIcon />{" "}
+              Add Note <AddIcon />
             </button>
           </div>
         </div>
-        <div className="flex w-full flex-col items-center justify-center">
+        <div className="flex w-full flex-col items-center justify-center space-y-1 px-2 md:flex-row md:justify-start md:space-x-2 md:space-y-0">
           <div className="flex h-fit w-fit items-center justify-center rounded-lg bg-gray-200 pr-2">
             <input
               type="text"
@@ -107,6 +93,7 @@ const Home: NextPage = () => {
               id="search"
               className="rounded-lg bg-gray-200 p-2 text-sm outline-none transition-all"
               autoComplete="off"
+              placeholder="Search Notes"
             />
 
             <SearchIcon
@@ -124,19 +111,43 @@ const Home: NextPage = () => {
               <CloseIcon className="flex w-2" />
             </button>
           </div>
-          <div className="flex items-center justify-center p-2">
-            <Transition
-              show={!found}
-              enter="transition ease-out duration-300"
-              enterFrom="transform translate-y-4"
-              enterTo="transform translate-y-0"
-              leave="transition ease-in duration-200"
-              leaveFrom="transform translate-y-0"
-              leaveTo="transform translate-y-4"
-            >
-              {!found && <p>No Notes Found</p>}
-            </Transition>
+          <div className="flex gap-2 rounded-lg border p-2">
+            <label htmlFor="check" className="text-sm">
+              Show Completed Notes
+            </label>
+            <input
+              type="checkbox"
+              checked={completed}
+              onChange={(e) => handleNoteFilter(e)}
+              id="checked_only"
+              className="rounded-lg bg-gray-200 p-2 text-sm outline-none transition-all"
+            />
           </div>
+          <div className="flex space-x-2 rounded-lg border p-2">
+            <label htmlFor="check" className="text-sm">
+              Show Uncompleted Notes
+            </label>
+            <input
+              type="checkbox"
+              checked={uncompleted}
+              onChange={(e) => handleNoteFilter(e)}
+              id="unchecked_only"
+              className="rounded-lg bg-gray-200 p-2 text-sm outline-none transition-all"
+            />
+          </div>
+          <Transition
+            show={!found}
+            enter="transition ease-out duration-300"
+            enterFrom="transform translate-y-4"
+            enterTo="transform translate-y-0"
+            leave="transition ease-in duration-200"
+            leaveFrom="transform translate-y-0"
+            leaveTo="transform translate-y-4"
+          >
+            <div className="flex items-center justify-center p-2">
+              {!found && <p>No Notes Found</p>}
+            </div>
+          </Transition>
         </div>
         <AddNote
           openModal={openModal}
@@ -153,42 +164,30 @@ const Home: NextPage = () => {
           enter="transition ease-out duration-300"
           enterFrom="transform opacity-0 scale-95"
           enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-200"
+          leave="transition ease-in duration-300"
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
           className="flex flex-col items-center justify-center space-y-4 p-2 transition-all md:grid md:grid-cols-3 md:gap-4 md:space-y-0 lg:grid-cols-5"
         >
-          {filteredNotes
-            .sort((a, b) => {
-              if (sort === "desc") {
-                const one = new Date(b.updatedAt).getTime();
-                const two = new Date(a.updatedAt).getTime();
-                return one - two;
-              } else {
-                const one = new Date(a.updatedAt).getTime();
-                const two = new Date(b.updatedAt).getTime();
-                return one - two;
-              }
-            })
-            .map((item) => (
-              <Transition.Child
-                key={item.id}
-                appear={true}
-                enter="transition ease-out duration-300"
-                enterFrom="transform scale-100 -translate-x-8"
-                enterTo="transform scale-100 -translate-x-0"
-                leave="transform duration-200 transition ease-in-out"
-                leaveFrom="opacity-100 rotate-0 scale-100"
-                leaveTo="opacity-0 scale-75 transform -translate-x-[4rem]"
-              >
-                <Note
-                  item={item}
-                  refetch={items.refetch}
-                  setNotes={setNotes}
-                  notes={notes}
-                />
-              </Transition.Child>
-            ))}
+          {filteredNotes.map((item) => (
+            <Transition.Child
+              key={item.id}
+              appear={true}
+              enter="transition ease-out duration-300"
+              enterFrom="transform scale-100 -translate-x-8"
+              enterTo="transform scale-100 -translate-x-0"
+              leave="transform duration-200 transition ease-in-out"
+              leaveFrom="opacity-100 rotate-0 scale-100"
+              leaveTo="opacity-0 scale-75 transform -translate-x-[4rem]"
+            >
+              <Note
+                item={item}
+                refetch={items.refetch}
+                setNotes={setNotes}
+                notes={notes}
+              />
+            </Transition.Child>
+          ))}
         </Transition>
       </div>
     </>
