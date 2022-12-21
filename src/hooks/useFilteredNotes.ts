@@ -7,7 +7,7 @@ export default function useFilteredNotes(notes: Note[]) {
   const [found, setFound] = useState(true);
   const [completed, setCompleted] = useState(false);
   const [uncompleted, setUncompleted] = useState(false);
-
+  const [filteredNotFound, setFilteredNotFound] = useState(false);
   const sortedTimeNotes = notes.sort((a, b) => {
     const one = new Date(b.updatedAt).getTime();
     const two = new Date(a.updatedAt).getTime();
@@ -37,6 +37,7 @@ export default function useFilteredNotes(notes: Note[]) {
       setFound(true);
     }
   }, [query, found]);
+
   const handleNoteFilter = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.id === "checked_only") {
       setUncompleted(false);
@@ -49,11 +50,28 @@ export default function useFilteredNotes(notes: Note[]) {
 
   const filteredNotes = useMemo(() => {
     if (completed) {
-      return filteredNotesByQuery.filter((note) => note.checked === true);
+      const completed = filteredNotesByQuery.filter(
+        (note) => note.checked === true
+      );
+      if (completed.length === 0) {
+        setFilteredNotFound(true);
+        return filteredNotesByQuery;
+      }
+      setFilteredNotFound(false);
+      return completed;
     }
     if (uncompleted) {
-      return filteredNotesByQuery.filter((note) => note.checked === false);
+      const uncompleted = filteredNotesByQuery.filter(
+        (note) => note.checked === false
+      );
+      if (uncompleted.length === 0) {
+        setFilteredNotFound(true);
+        return filteredNotesByQuery;
+      }
+      setFilteredNotFound(false);
+      return uncompleted;
     }
+    setFilteredNotFound(false);
     return filteredNotesByQuery;
   }, [completed, uncompleted, filteredNotesByQuery]);
 
@@ -65,5 +83,6 @@ export default function useFilteredNotes(notes: Note[]) {
     uncompleted,
     handleNoteFilter,
     filteredNotes,
+    filteredNotFound,
   };
 }

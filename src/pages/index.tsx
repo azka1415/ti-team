@@ -46,6 +46,7 @@ const Home: NextPage = () => {
     completed,
     uncompleted,
     filteredNotes,
+    filteredNotFound,
   } = useFilteredNotes(notes);
 
   useEffect(() => {
@@ -54,8 +55,10 @@ const Home: NextPage = () => {
       setNotes(items.data);
       setShowItems(true);
     }
-  }, [items.data]);
-  console.log(filteredNotes.length);
+    if (!found) {
+      setShowItems(false);
+    }
+  }, [items.data, found]);
   return (
     <>
       <Head>
@@ -130,7 +133,7 @@ const Home: NextPage = () => {
             />
           </div>
           <Transition
-            show={!found}
+            show={!found || filteredNotFound}
             appear={true}
             enter="transition ease-out duration-300"
             enterFrom="transform translate-y-4"
@@ -139,8 +142,11 @@ const Home: NextPage = () => {
             leaveFrom="transform translate-y-0"
             leaveTo="transform translate-y-4"
           >
-            <div className="flex items-center justify-center p-2">
-              {!found && <p>No Notes Found</p>}
+            <div className="flex items-center justify-center divide-x divide-black">
+              {!found && <p className="px-1">No Notes Found</p>}
+              {filteredNotFound && (
+                <p className="px-1">No Notes Found With That Filter</p>
+              )}
             </div>
           </Transition>
         </div>
