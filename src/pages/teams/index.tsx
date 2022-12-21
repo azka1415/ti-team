@@ -2,11 +2,38 @@ import Head from "next/head";
 import React from "react";
 import Navbar from "../../components/navbar/Navbar";
 import { trpc } from "../../utils/trpc";
+import { useSession } from "next-auth/react";
+import type { GetServerSideProps } from "next";
+import { getServerAuthSession } from "../../server/common/get-server-auth-session";
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getServerAuthSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+};
 
 export default function TeamHome() {
+  const { data: session } = useSession();
   const getTeams = trpc.team.getTeams.useQuery();
   const { data } = getTeams;
-  console.log(data);
+
+  if (getTeams.error) {
+    return <div>{getTeams.error.message}</div>;
+  }
+
   return (
     <>
       <Head>
@@ -29,9 +56,11 @@ export default function TeamHome() {
           {data?.teams.map((team) => (
             <div
               key={team.id}
-              className="flex w-fit rounded-md bg-blue-300 p-2"
+              className="flex w-fit flex-col rounded-md bg-blue-300 p-2"
             >
               <h1>{team.name}</h1>
+              <p>{team.description}</p>
+              <p>{new Date(team.createdAt).toLocaleDateString()}</p>
             </div>
           ))}
         </div>
