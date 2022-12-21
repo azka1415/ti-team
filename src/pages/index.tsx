@@ -151,7 +151,7 @@ const Home: NextPage = () => {
           setOpenModal={setOpenModal}
         />
         {items.isLoading && <div className="p-2">Loading...</div>}
-        {notes.length === 0 ? (
+        {notes.length === 0 && !items.isLoading ? (
           <div className="p-2">No notes found</div>
         ) : (
           <Transition
