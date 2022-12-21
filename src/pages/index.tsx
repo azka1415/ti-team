@@ -143,7 +143,7 @@ const Home: NextPage = () => {
             leaveFrom="transform translate-y-0"
             leaveTo="transform translate-y-4"
           >
-            <div className="flex items-center justify-center divide-x divide-black">
+            <div className="flex flex-col items-center justify-center divide-y divide-black md:flex-row md:divide-x md:divide-y-0">
               {!found && <p className="px-1">No Notes Found</p>}
               {filteredNotFound && (
                 <p className="px-1">No Notes Found With That Filter</p>
