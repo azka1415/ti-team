@@ -40,13 +40,13 @@ const Home: NextPage = () => {
   const [showItems, setShowItems] = useState(false);
   const {
     query,
-    setQuery,
     found,
-    handleNoteFilter,
     completed,
     uncompleted,
     filteredNotes,
     filteredNotFound,
+    setQuery,
+    handleNoteFilter,
   } = useFilteredNotes(notes);
 
   useEffect(() => {
@@ -59,6 +59,7 @@ const Home: NextPage = () => {
       setShowItems(false);
     }
   }, [items.data, found]);
+
   return (
     <>
       <Head>
@@ -157,7 +158,7 @@ const Home: NextPage = () => {
           setOpenModal={setOpenModal}
         />
         {items.isLoading && <div className="p-2">Loading...</div>}
-        {notes.length === 0 && !items.isLoading ? (
+        {notes.length === 0 && !items.isInitialLoading ? (
           <div className="p-2">No notes found</div>
         ) : (
           <Transition
