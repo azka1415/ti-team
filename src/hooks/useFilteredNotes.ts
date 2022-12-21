@@ -8,6 +8,7 @@ export default function useFilteredNotes(notes: Note[]) {
   const [completed, setCompleted] = useState(false);
   const [uncompleted, setUncompleted] = useState(false);
   const [filteredNotFound, setFilteredNotFound] = useState(false);
+
   const sortedTimeNotes = notes.sort((a, b) => {
     const one = new Date(b.updatedAt).getTime();
     const two = new Date(a.updatedAt).getTime();
@@ -77,12 +78,12 @@ export default function useFilteredNotes(notes: Note[]) {
 
   return {
     query,
-    setQuery,
     found,
     completed,
     uncompleted,
-    handleNoteFilter,
     filteredNotes,
     filteredNotFound,
+    setQuery,
+    handleNoteFilter,
   };
 }

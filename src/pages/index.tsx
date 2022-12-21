@@ -110,7 +110,7 @@ const Home: NextPage = () => {
             </button>
           </div>
           <div className="flex gap-2 rounded-lg border p-2">
-            <label htmlFor="check" className="text-sm">
+            <label htmlFor="checked_only" className="text-sm">
               Show Completed Notes
             </label>
             <input
@@ -122,7 +122,7 @@ const Home: NextPage = () => {
             />
           </div>
           <div className="flex space-x-2 rounded-lg border p-2">
-            <label htmlFor="check" className="text-sm">
+            <label htmlFor="unchecked_only" className="text-sm">
               Show Uncompleted Notes
             </label>
             <input
@@ -176,7 +176,7 @@ const Home: NextPage = () => {
             {filteredNotes.map((item) => (
               <Transition.Child
                 key={item.id}
-                appear={showItems}
+                appear={true}
                 enter="transition ease-out duration-300"
                 enterFrom="transform scale-100 -translate-x-8"
                 enterTo="transform scale-100 -translate-x-0"
