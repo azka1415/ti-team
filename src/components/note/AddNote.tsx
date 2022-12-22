@@ -1,5 +1,4 @@
 import { Dialog, Transition } from "@headlessui/react";
-import type { Session } from "next-auth";
 import type { Dispatch, FormEvent, SetStateAction } from "react";
 import { useState } from "react";
 import { Fragment } from "react";
@@ -8,7 +7,6 @@ import { CloseIcon, SpinnerIcon } from "@chakra-ui/icons";
 import type { Note } from "@prisma/client";
 
 interface Props {
-  session: Session | null;
   setOpenModal: (value: boolean) => void;
   openModal: boolean;
   setNotes: Dispatch<SetStateAction<Note[]>>;

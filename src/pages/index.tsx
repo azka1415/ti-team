@@ -34,7 +34,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 const Home: NextPage = () => {
-  const { data: session } = useSession();
   const items = trpc.note.getItems.useQuery();
   const [openModal, setOpenModal] = useState(false);
   const [notes, setNotes] = useState<NoteModel[]>([]);
@@ -75,7 +74,6 @@ const Home: NextPage = () => {
         <FilterNotes useFilteredNotes={filter} setShowItems={setShowItems} />
         <AddNote
           openModal={openModal}
-          session={session}
           setOpenModal={setOpenModal}
           setNotes={setNotes}
         />
