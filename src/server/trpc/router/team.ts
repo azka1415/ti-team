@@ -46,7 +46,7 @@ export const teamRouter = router({
     }),
   getTeams: publicProcedure.query(async ({ ctx }) => {
     const teams = await ctx.prisma.member.findMany({
-      where: { userId: ctx.session?.user?.id },
+      where: { user: { id: ctx.session?.user?.id } },
       select: {
         teams: true,
       },
