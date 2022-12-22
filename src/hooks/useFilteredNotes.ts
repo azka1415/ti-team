@@ -2,7 +2,18 @@ import type { Note } from "@prisma/client";
 import type { ChangeEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
 
-export default function useFilteredNotes(notes: Note[]) {
+export type FilteredNotes = {
+  query: string;
+  found: boolean;
+  completed: boolean;
+  uncompleted: boolean;
+  filteredNotes: Note[];
+  filteredNotFound: boolean;
+  setQuery: (query: string) => void;
+  handleNoteFilter: (e: ChangeEvent<HTMLInputElement>) => void;
+};
+
+export default function useFilteredNotes(notes: Note[]): FilteredNotes {
   const [query, setQuery] = useState("");
   const [found, setFound] = useState(true);
   const [completed, setCompleted] = useState(false);

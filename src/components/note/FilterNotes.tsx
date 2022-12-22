@@ -1,14 +1,14 @@
-import React from "react";
-import useFilteredNotes from "../../hooks/useFilteredNotes";
-import type { Note } from "@prisma/client";
+import React, { useEffect } from "react";
 import { CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import { Transition } from "@headlessui/react";
+import type { FilteredNotes } from "../../hooks/useFilteredNotes";
 
 interface Props {
-  notes: Note[];
+  useFilteredNotes: FilteredNotes;
+  setShowItems: (value: boolean) => void;
 }
 
-export default function FilterNotes({ notes }: Props) {
+export default function FilterNotes({ setShowItems, useFilteredNotes }: Props) {
   const {
     query,
     found,
@@ -17,7 +17,17 @@ export default function FilterNotes({ notes }: Props) {
     filteredNotFound,
     setQuery,
     handleNoteFilter,
-  } = useFilteredNotes(notes);
+  } = useFilteredNotes;
+
+  useEffect(() => {
+    if (!found) {
+      setShowItems(false);
+    }
+    if (found) {
+      setShowItems(true);
+    }
+  }, [found, setShowItems]);
+
   return (
     <div className="flex w-full flex-col items-center justify-center space-y-1 px-2 md:flex-row md:justify-start md:space-x-2 md:space-y-0">
       <div className="flex h-fit w-fit items-center justify-center rounded-lg bg-gray-200 pr-2">

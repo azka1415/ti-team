@@ -39,7 +39,8 @@ const Home: NextPage = () => {
   const [openModal, setOpenModal] = useState(false);
   const [notes, setNotes] = useState<NoteModel[]>([]);
   const [showItems, setShowItems] = useState(false);
-  const { found, filteredNotes } = useFilteredNotes(notes);
+  const filter = useFilteredNotes(notes);
+  const { filteredNotes } = filter;
 
   useEffect(() => {
     if (items.data) {
@@ -47,10 +48,7 @@ const Home: NextPage = () => {
       setNotes(items.data);
       setShowItems(true);
     }
-    if (!found) {
-      setShowItems(false);
-    }
-  }, [items.data, found]);
+  }, [items.data]);
 
   return (
     <>
@@ -74,12 +72,12 @@ const Home: NextPage = () => {
             </button>
           </div>
         </div>
-        <FilterNotes notes={notes} />
+        <FilterNotes useFilteredNotes={filter} setShowItems={setShowItems} />
         <AddNote
           openModal={openModal}
-          refetch={items.refetch}
           session={session}
           setOpenModal={setOpenModal}
+          setNotes={setNotes}
         />
         {items.isLoading && <div className="p-2">Loading...</div>}
         {notes.length === 0 && !items.isInitialLoading ? (
