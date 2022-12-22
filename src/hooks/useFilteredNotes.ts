@@ -20,11 +20,13 @@ export default function useFilteredNotes(notes: Note[]): FilteredNotes {
   const [uncompleted, setUncompleted] = useState(false);
   const [filteredNotFound, setFilteredNotFound] = useState(false);
 
-  const sortedTimeNotes = notes.sort((a, b) => {
-    const one = new Date(b.updatedAt).getTime();
-    const two = new Date(a.updatedAt).getTime();
-    return one - two;
-  });
+  const sortedTimeNotes = useMemo(() => {
+    return [...notes].sort((a, b) => {
+      const one = new Date(b.updatedAt).getTime();
+      const two = new Date(a.updatedAt).getTime();
+      return one - two;
+    });
+  }, [notes]);
 
   const filteredNotesByQuery = useMemo(() => {
     if (query === "") {
