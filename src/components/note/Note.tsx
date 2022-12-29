@@ -4,7 +4,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { Fragment, useState } from "react";
 import { trpc } from "../../utils/trpc";
 import NoteModal from "./NoteModal";
-import { CheckIcon, DeleteIcon, EditIcon, SpinnerIcon } from "@chakra-ui/icons";
+import { CheckIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 interface Props {
   item: Note;
   refetch: () => void;
@@ -34,7 +34,7 @@ const Note = ({ item, refetch, setNotes, notes }: Props) => {
     );
     setTimeout(() => {
       setDeleted(true);
-    }, 300);
+    }, 500);
 
     handleCheck.mutate({
       check: !item.checked,
@@ -46,7 +46,7 @@ const Note = ({ item, refetch, setNotes, notes }: Props) => {
     setDeleted(false);
     setTimeout(() => {
       setNotes(notes.filter((note) => note.id !== item.id));
-    }, 500);
+    }, 300);
 
     handleDelete.mutate({
       text: item.id,
