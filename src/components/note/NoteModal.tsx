@@ -87,7 +87,7 @@ export default function NoteModal({
       <Transition appear show={openModal} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-10"
+          className="relative z-20"
           onClose={() => setOpenModal(false)}
         >
           <Transition.Child
@@ -102,7 +102,7 @@ export default function NoteModal({
             <div className="fixed inset-0 bg-black bg-opacity-25" />
           </Transition.Child>
 
-          <div className="fixed inset-0 overflow-y-auto">
+          <div className="fixed inset-0 h-screen overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <Transition.Child
                 as={Fragment}
