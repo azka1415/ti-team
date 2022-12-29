@@ -19,17 +19,27 @@ const Note = ({ item, refetch, setNotes, notes }: Props) => {
   const [openModal, setOpenModal] = useState(false);
 
   const checkItem = async () => {
-    handleCheck.mutateAsync(
-      {
-        check: !item.checked,
-        text: item.id,
-      },
-      {
-        onSuccess() {
-          refetch();
-        },
-      }
+    setDeleted(false);
+    setNotes(
+      notes.map((note) => {
+        if (note.id === item.id) {
+          return {
+            ...note,
+            checked: !note.checked,
+            updatedAt: new Date(),
+          };
+        }
+        return note;
+      })
     );
+    setTimeout(() => {
+      setDeleted(true);
+    }, 300);
+
+    handleCheck.mutate({
+      check: !item.checked,
+      text: item.id,
+    });
   };
 
   const deleteItem = async () => {
@@ -38,25 +48,21 @@ const Note = ({ item, refetch, setNotes, notes }: Props) => {
       setNotes(notes.filter((note) => note.id !== item.id));
     }, 500);
 
-    handleDelete.mutate(
-      {
-        text: item.id,
-      },
-      {
-        onSuccess() {
-          refetch();
-        },
-      }
-    );
+    handleDelete.mutate({
+      text: item.id,
+    });
   };
 
   return (
     <Transition
       as={Fragment}
       show={deleted}
-      leave="transition ease-in duration-200"
-      leaveFrom="opacity-100 translate-y-0"
-      leaveTo="opacity-0 translate-y-8"
+      enter="transition ease-in-out duration-200"
+      enterFrom="opacity-0 -translate-x-8"
+      enterTo="opacity-100 -translate-x-0"
+      leave="transition ease-in-out duration-200"
+      leaveFrom="opacity-100 -translate-x-0"
+      leaveTo="opacity-0 -translate-x-8"
     >
       <div className="flex w-full flex-col rounded-lg border-2 border-gray-300 bg-gradient-to-b from-blue-400 to-blue-600 p-2 shadow-2xl">
         <div className="flex max-h-96 flex-col space-y-2 rounded-lg p-2 text-start">
@@ -74,11 +80,6 @@ const Note = ({ item, refetch, setNotes, notes }: Props) => {
               } cursor-pointer`}
               onClick={() => setOpenModal(true)}
             />
-            <div className="flex items-center justify-end">
-              {handleCheck.isLoading && (
-                <SpinnerIcon className="animate-spin" />
-              )}
-            </div>
           </div>
           <div className="flex w-min items-center space-x-2"></div>
           <hr />
