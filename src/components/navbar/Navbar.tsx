@@ -11,7 +11,7 @@ export default function Navbar() {
   const pathname = router.pathname.replace("/", "");
 
   return (
-    <nav className="sticky top-0 z-50 flex w-full space-x-4 bg-gradient-to-r from-blue-400 to-blue-600 p-2">
+    <nav className="sticky top-0 z-10 flex w-full space-x-4 bg-gradient-to-r from-blue-400 to-blue-600 p-2">
       <div
         className={`flex h-10 w-full items-center justify-start space-x-4 transition-all`}
       >
